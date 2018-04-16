@@ -1,0 +1,120 @@
+$margins: 8, 16, 24, 32, 40, 48, 56, 64, 72, 80;
+
+@mixin margin-default() {
+	display: block;
+	width: 100%;
+	padding: 0;
+	clear: both;
+	position: relative;
+	min-height: 1px;
+	height: 1px;
+	max-height: 1px;
+	line-height: 1px;
+	box-sizing: border-box;
+	zoom: 1;	
+
+	&:after, &:before {
+		content: '';
+		width: 100%;
+		display: block;
+		clear: both;
+	}
+}
+
+@mixin clear-default() {
+	display: block;
+  width: 100%;
+  padding: 0;
+  clear: both;	
+
+	&:after, &:before {
+		content: '';
+		width: 100%;
+		display: block;
+		clear: both;
+	}
+}
+
+@mixin system-margins ($divider: 'mobile') {
+    $num-divider: null;
+    
+    @if $divider == 'mobile' {
+		  $num-divider: 4;
+    } @else if $divider == 'tablet' {
+		  $num-divider: 2;
+    } @else if $divider == 'desktop' {
+		  $num-divider: 2;
+    } @else if $divider == 'larger' {
+		  $num-divider: 1.5;
+    } @else {
+      $num-divider: 2;
+    }
+    
+  	@each $margin in $margins {
+    	.m#{$margin} {
+      	@include margin-default;
+      	margin: (($margin / $num-divider) / 16) + rem 0;
+    	}
+    	
+    	@if $divider == 'mobile' {
+        .m#{$margin}-only-mobile {
+          @include margin-default;
+          margin: (($margin / $num-divider) / 16) + rem 0;
+        }
+
+        .m#{$margin}-only-tablet, .m#{$margin}-only-desktop, .m#{$margin}-only-larger { display: none; }
+        .clear-only-tablet, .clear-only-desktop, .clear-only-larger { display: none; }
+        .clear-only-mobile { @include clear-default; }
+      }
+    	
+		  @if $divider == 'tablet' {
+        .m#{$margin}-only-tablet {
+          @include margin-default;
+          margin: (($margin / $num-divider) / 16) + rem 0;
+        }
+        
+        .m#{$margin}-only-mobile, .m#{$margin}-only-desktop, .m#{$margin}-only-larger { display: none; }
+        .clear-only-mobile, .clear-only-desktop, .clear-only-larger { display: none; }
+        .clear-only-tablet { @include clear-default; }
+      }
+      
+		  @if $divider == 'desktop' {
+        .m#{$margin}-only-desktop {
+          @include margin-default;
+          margin: (($margin / $num-divider) / 16) + rem 0;
+        }
+
+        .m#{$margin}-only-mobile, .m#{$margin}-only-tablet { display: none; }
+        .clear-only-mobile, .clear-only-tablet, .clear-only-larger { display: none; }
+        .clear-only-desktop { @include clear-default; }
+      }
+        
+      @if $divider == 'larger' {
+        .m#{$margin}-only-larger {
+          @include margin-default;
+          margin: (($margin / $num-divider) / 16) + rem 0;
+        }
+        .m#{$margin}-only-mobile { display: none; }
+        .m#{$margin}-only-tablet { display: none; }
+
+        .m#{$margin}-only-mobile, .m#{$margin}-only-tablet { display: none; }
+        .clear-only-mobile, .clear-only-tablet, .clear-only-desktop { display: none; }
+        .clear-only-larger { @include clear-default; }
+      }
+    }
+}
+
+// system margin deafult
+@include system-margins('mobile');
+
+@media screen and (min-width: 768px) {
+    @include system-margins('tablet');
+}
+
+@media screen and (min-width: 992px) {
+    @include system-margins('desktop');
+}
+
+@media screen and (min-width: 1200px) {
+    @include system-margins('larger');
+}
